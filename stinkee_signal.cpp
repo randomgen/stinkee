@@ -10,9 +10,9 @@ static const char UNDEFINED_1 = 0x00;
 static const char UNDEFINED_2 = 0x01;
 static const char FOOTER      = 0xF4;
 
-static const size_t NUM_STARTING_FRAMES        = 220;
-static const size_t NUM_STARTING_SILENT_FRAMES = 440;
-static const size_t NUM_TERMINATING_FRAMES     =   5;
+static const std::size_t NUM_STARTING_FRAMES        = 220;
+static const std::size_t NUM_STARTING_SILENT_FRAMES = 440;
+static const std::size_t NUM_TERMINATING_FRAMES     =   5;
 
 static const int BIT_0_FREQUENCY = 2200; // wavelength to encode binary 0 (Hz)
 static const int BIT_1_FREQUENCY = 1100; // wavelength to encode binary 1 (Hz)
