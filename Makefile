@@ -1,16 +1,19 @@
-CC=clang++
+CC=g++
 CCFLAGS=-std=c++11 -Wall
+LIB=libstinkee.a
 LIBSRC=\
-	stinkee_device.cpp \
-	stinkee_signal.cpp \
-	stinkee_squarewaveutil.cpp
+	stinkee_device.o \
+	stinkee_signal.o \
+	stinkee_squarewaveutil.o
 
-stinkeedemo: libstinkee stinkeedemo.cpp
-	$(CC) -I. -L. -lstinkee -lportaudio stinkeedemo.cpp -o stinkeedemo
+stinkeedemo: $(LIB) stinkeedemo.o
+	$(CC) $(CCFLAGS) -o stinkeedemo -L. stinkeedemo.o -lstinkee -lportaudio
 
-libstinkee: $(LIBSRC)
-	$(CC) -c $(CCFLAGS) -I. $(LIBSRC)
-	ar -rcs libstinkee.a *.o
+$(LIB): $(LIBSRC)
+	ar -rcs $(LIB) $?
+
+%.o: %.cpp
+	$(CC) -c $(CCFLAGS) -I. $<
 
 .PHONY: clean
 clean:
