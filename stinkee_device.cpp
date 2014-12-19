@@ -49,24 +49,14 @@ int Device::process(const Signal& signal) const
     PaError rc;
     CbUserData userData = { 0, signal };
 
-    PaStreamParameters outputParams;
-    outputParams.channelCount = NUM_CHANNELS;
-    outputParams.sampleFormat = SAMPLE_TYPE;
-    outputParams.hostApiSpecificStreamInfo = NULL;
-    outputParams.device = Pa_GetDefaultOutputDevice();
-    if (outputParams.device == paNoDevice) {
-        std::cerr << "No audio output device available" << std::endl;
-        return paNoDevice;
-    }
-
     void *audioStream;
-    rc = Pa_OpenStream(
+    rc = Pa_OpenDefaultStream(
             &audioStream,
-            NULL,
-            &outputParams,
+            0,
+            NUM_CHANNELS,
+            SAMPLE_TYPE,
             Signal::SAMPLING_RATE,
             paFramesPerBufferUnspecified,
-            paClipOff,
             paCallback,
             &userData);
 
