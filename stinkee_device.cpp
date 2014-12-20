@@ -49,7 +49,7 @@ int Device::process(const Signal& signal) const
     PaError rc;
     CbUserData userData = { 0, signal };
 
-    void *audioStream;
+    PaStream *audioStream;
     rc = Pa_OpenDefaultStream(
             &audioStream,
             0,
@@ -82,9 +82,18 @@ int Device::process(const Signal& signal) const
         std::cerr << "Failed to stop stream: "
                   << Pa_GetErrorText(rc)
                   << std::endl;
+        return rc;
     }
 
-    return rc;
+    rc = Pa_CloseStream(audioStream);
+    if (rc != paNoError) {
+        std::cerr << "Failed to close stream: "
+                  << Pa_GetErrorText(rc)
+                  << std::endl;
+        return rc;
+    }
+
+    return 0;
 }
 
 }  // library namespace

@@ -1,5 +1,5 @@
 CC=g++
-CCFLAGS=-std=c++11 -Wall
+CCFLAGS=-std=c++11 -Wall -g
 LIB=libstinkee.a
 LIBSRC=\
 	stinkee_device.o \
@@ -17,6 +17,6 @@ $(LIB): $(LIBSRC)
 
 .PHONY: clean
 clean:
-	rm -f *.o
-	rm -f libstinkee.a
+	rm -f $(LIBSRC) stinkeedemo.o
+	rm -f $(LIB)
 	rm -f stinkeedemo
