@@ -3,6 +3,7 @@
 
 #include <portaudio.h>
 
+#include <cassert>
 #include <iostream>
 
 namespace {
@@ -93,6 +94,8 @@ int Device::process(const Signal& signal) const
         return rc;
     }
 
+    assert(userData.processed == signal.frames().size());
+
     return 0;
 }
 
@@ -107,22 +110,21 @@ int paCallback(const void                     *input,
                PaStreamCallbackFlags           statusFlags,
                void                           *userData)
 {
-    CbUserData& data = *((CbUserData *)userData);
-    const std::vector<float> frames = data.signal.frames();
+    CbUserData *data = (CbUserData *)userData;
+    const std::vector<float>& frames = data->signal.frames();
     float *out = (float *)output;
 
     for (std::size_t i = 0; i < frameCount; ++i) {
-        if (data.processed < frames.size()) {
-            *out = frames[data.processed];
+        if (data->processed < frames.size()) {
+            *out = frames[data->processed++];
         }
         else {
             *out = 0.0;
         }
         ++out;
-        ++data.processed;
     }
 
-    return data.processed < frames.size() ? paContinue : paComplete;
+    return data->processed < frames.size() ? paContinue : paComplete;
 }
 
 }  // anonymous namespace
