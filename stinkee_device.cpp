@@ -4,6 +4,7 @@
 #include <portaudio.h>
 
 #include <cassert>
+#include <cstring>
 #include <iostream>
 
 namespace {
@@ -127,16 +128,21 @@ int paCallback(const void                     *input,
     const std::vector<float>& frames = data->signal.frames();
     float *out = (float *)output;
 
-    for (std::size_t i = 0; i < frameCount; ++i) {
-        if (data->processed < frames.size()) {
-            *out = frames[data->processed++];
-        }
-        else {
-            *out = 0.0;
-        }
-        ++out;
-    }
+    // Caller may request more frames than there is left in the signal buffer
+    // once the end is reached
+    std::size_t framesCopied = std::min(frameCount,
+                                        frames.size() - data->processed);
 
+    std::memcpy(out,
+                &frames[data->processed],
+                framesCopied * sizeof (float));
+
+    // At the end of the signal, fill the rest of the buffer with silence
+    std::memset(out + framesCopied,
+                0,
+                (frameCount - framesCopied) * sizeof (float));
+
+    data->processed += framesCopied;
     return data->processed < frames.size() ? paContinue : paComplete;
 }
 
