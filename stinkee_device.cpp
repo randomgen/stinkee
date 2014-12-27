@@ -30,18 +30,27 @@ int paCallback(const void                     *input,
 
 namespace stinkee {
 
-Device::~Device()
+Device::Device()
+: m_initialized(false)
 {
-    Pa_Terminate();
 }
 
-int Device::init() const
+Device::~Device()
+{
+    if (m_initialized) {
+        Pa_Terminate();
+    }
+}
+
+int Device::init()
 {
     PaError rc = Pa_Initialize();
     if (rc != paNoError) {
         std::cerr << "Failed to initialize portaudio: "
                   << Pa_GetErrorText(rc)
                   << std::endl;
+    } else {
+        m_initialized = true;
     }
 
     return rc;
@@ -49,6 +58,8 @@ int Device::init() const
 
 int Device::process(const Signal& signal) const
 {
+    assert(m_initialized);
+
     PaError rc;
     CbUserData userData = { 0, signal };
 

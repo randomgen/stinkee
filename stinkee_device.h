@@ -5,9 +5,13 @@ namespace stinkee { class Signal; }
 namespace stinkee {
 
 class Device {
+  private:
+    bool m_initialized;
+
   public:
+    Device();
     ~Device();
-    int init() const;
+    int init();
     int process(const Signal& signal) const;
 };
 
