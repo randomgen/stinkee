@@ -142,7 +142,7 @@ int paCallback(const void                     *input,
 
     // Caller may request more frames than there is left in the signal buffer
     // once the end is reached
-    std::size_t framesCopied = std::min(frameCount,
+    std::size_t framesCopied = std::min((std::size_t)frameCount,
                                         frames.size() - data->processed);
 
     std::memcpy(out,
