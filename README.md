@@ -13,16 +13,25 @@ scent and emits a colour.
 
 ## Build instructions
 
-Stinkee depends on the cross-platform
-[PortAudio](http://www.portaudio.com) library to transmit the encoded
-sound signal, which activates the Scentee diffuser, to the audio output device.
-Please refer to the PortAudio website for instructions on how to install it.
+Stinkee depends on the cross-platform [PortAudio](http://www.portaudio.com)
+library (version 20140130) to transmit the encoded sound signal, which
+activates the Scentee diffuser, to the audio output device.  Please refer to
+the PortAudio website for instructions on how to install it.
+
 Then simply run
 
     make
 
 to build the `libstinkee.a` static library and the `stinkeedemo` example
-program.  (Note that the build has only been tested on Mac OS X so far.)
+program.
+
+The build passed on the following platforms:
+
+- Mac OS X Yosemite (clang++ 6.0)
+- Linux Ubuntu 14.04 LTS (g++ 4.8.2)
+
+**Note, however, that on Linux with ALSA the audio signal drops due to
+unresolved latency issues.**
 
 ## Run the demo
 

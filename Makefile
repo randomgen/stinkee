@@ -1,19 +1,19 @@
-CC=g++
-CCFLAGS=-std=c++11 -Wall -g
-LIB=libstinkee.a
-LIBSRC=\
+CXX      ?= g++
+CXXFLAGS ?= -std=c++11 -Wall -g
+LIB       = libstinkee.a
+LIBSRC    = \
 	stinkee_device.o \
 	stinkee_signal.o \
 	stinkee_squarewaveutil.o
 
 stinkeedemo: $(LIB) stinkeedemo.o
-	$(CC) $(CCFLAGS) -o stinkeedemo -L. stinkeedemo.o -lstinkee -lportaudio
+	$(CXX) $(CXXFLAGS) -o stinkeedemo -L. stinkeedemo.o -lstinkee -lportaudio
 
 $(LIB): $(LIBSRC)
 	ar -rcs $(LIB) $?
 
 %.o: %.cpp
-	$(CC) -c $(CCFLAGS) -I. $<
+	$(CXX) -c $(CXXFLAGS) -I. $<
 
 .PHONY: clean
 clean:
