@@ -1,4 +1,4 @@
-#include <stinkee_device.h>
+#include <stinkee_diffuser.h>
 #include <stinkee_signal.h>
 
 #include <cstdlib>
@@ -10,17 +10,17 @@ int main(int argc, char* argv[])
     yellow.encode(true,  true, false);
     purple.encode(true, false,  true);
 
-    stinkee::Device device;
+    stinkee::Diffuser diffuser;
 
-    if (0 != device.init()) {
+    if (0 != diffuser.init()) {
         return EXIT_FAILURE;                                          // RETURN
     }
 
-    if (0 != device.process(yellow)) {
+    if (0 != diffuser.process(yellow)) {
         return EXIT_FAILURE;                                          // RETURN
     }
 
-    if (0 != device.process(purple)) {
+    if (0 != diffuser.process(purple)) {
         return EXIT_FAILURE;                                          // RETURN
     }
 

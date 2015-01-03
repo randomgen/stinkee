@@ -1,16 +1,16 @@
-#ifndef STINKEE_DEVICE
-#define STINKEE_DEVICE
+#ifndef STINKEE_DIFFUSER
+#define STINKEE_DIFFUSER
 
 namespace stinkee { class Signal; }
 namespace stinkee {
 
-class Device {
+class Diffuser {
   private:
     bool m_initialized;
 
   public:
-    Device();
-    ~Device();
+    Diffuser();
+    ~Diffuser();
     int init();
     int process(const Signal& signal) const;
 };

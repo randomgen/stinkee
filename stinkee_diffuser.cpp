@@ -1,4 +1,4 @@
-#include <stinkee_device.h>
+#include <stinkee_diffuser.h>
 #include <stinkee_signal.h>
 
 #include <portaudio.h>
@@ -30,19 +30,19 @@ int paCallback(const void                     *input,
 
 namespace stinkee {
 
-Device::Device()
+Diffuser::Diffuser()
 : m_initialized(false)
 {
 }
 
-Device::~Device()
+Diffuser::~Diffuser()
 {
     if (m_initialized) {
         Pa_Terminate();
     }
 }
 
-int Device::init()
+int Diffuser::init()
 {
     PaError rc = Pa_Initialize();
     if (rc != paNoError) {
@@ -56,7 +56,7 @@ int Device::init()
     return rc;
 }
 
-int Device::process(const Signal& signal) const
+int Diffuser::process(const Signal& signal) const
 {
     assert(m_initialized);
 

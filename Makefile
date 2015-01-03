@@ -2,7 +2,7 @@ CXX      ?= g++
 CXXFLAGS ?= -std=c++11 -Wall -g
 LIB       = libstinkee.a
 LIBSRC    = \
-	stinkee_device.o \
+	stinkee_diffuser.o \
 	stinkee_signal.o \
 	stinkee_squarewaveutil.o
 
