@@ -8,7 +8,7 @@ const float SquareWaveUtil::SILENCE_AMPLITUDE    =  0.0;
 const float SquareWaveUtil::LOW_LEVEL_AMPLITUDE  = -1.0;
 const float SquareWaveUtil::HIGH_LEVEL_AMPLITUDE = +1.0;
 
-void SquareWaveUtil::encodeByte(const char          byte,
+void SquareWaveUtil::encodeByte(const unsigned char byte,
                                 const int           samplingRate,
                                 const int           bit0Frequency,
                                 const int           bit1Frequency,

@@ -1,5 +1,5 @@
 CXX      ?= g++
-CXXFLAGS ?= -std=c++11 -Wall -g
+CXXFLAGS ?= -std=c++11 -Wall -pedantic -g
 LIB       = libstinkee.a
 LIBSRC    = \
 	stinkee_diffuser.o \

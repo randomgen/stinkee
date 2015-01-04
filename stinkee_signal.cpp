@@ -5,10 +5,10 @@
 
 namespace {
 
-static const char HEADER      = 0x05;
-static const char UNDEFINED_1 = 0x00;
-static const char UNDEFINED_2 = 0x01;
-static const char FOOTER      = 0xF4;
+static const unsigned char HEADER      = 0x05;
+static const unsigned char UNDEFINED_1 = 0x00;
+static const unsigned char UNDEFINED_2 = 0x01;
+static const unsigned char FOOTER      = 0xF4;
 
 static const std::size_t NUM_STARTING_FRAMES        = 220;
 static const std::size_t NUM_STARTING_SILENT_FRAMES = 440;
@@ -32,11 +32,11 @@ void Signal::encode(const bool red, const bool green, const bool blue)
                     NUM_STARTING_SILENT_FRAMES,
                     SquareWaveUtil::SILENCE_AMPLITUDE);
 
-    std::vector<char> bytes = {
+    std::vector<unsigned char> bytes = {
         HEADER,
-        (char)(red   ? 0xFF : 0x00),
-        (char)(green ? 0xFF : 0x00),
-        (char)(blue  ? 0xFF : 0x00),
+        (unsigned char)(red   ? 0xFF : 0x00),
+        (unsigned char)(green ? 0xFF : 0x00),
+        (unsigned char)(blue  ? 0xFF : 0x00),
         UNDEFINED_1,
         UNDEFINED_2,
         FOOTER
