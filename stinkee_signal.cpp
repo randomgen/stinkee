@@ -59,6 +59,11 @@ void Signal::encode(const bool red, const bool green, const bool blue)
     m_frames.insert(m_frames.end(),
                     NUM_TERMINATING_FRAMES,
                     SquareWaveUtil::LOW_LEVEL_AMPLITUDE);
+
+    // Gap to separate consecutive signals
+    m_frames.insert(m_frames.end(),
+                    SAMPLING_RATE,
+                    SquareWaveUtil::SILENCE_AMPLITUDE);
 }
 
 const std::vector<float>& Signal::frames() const

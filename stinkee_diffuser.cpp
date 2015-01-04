@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstring>
+#include <future>
 #include <iostream>
 
 namespace {
@@ -15,6 +16,7 @@ static const PaSampleFormat SAMPLE_TYPE  = paFloat32;
 
 struct CbUserData
 {
+    std::promise<bool>     done;
     std::size_t            processed;
     const stinkee::Signal& signal;
 };
@@ -25,6 +27,8 @@ int paCallback(const void                     *input,
                const PaStreamCallbackTimeInfo *timeInfo,
                PaStreamCallbackFlags           statusFlags,
                void                           *userData);
+
+void paFinishedCallback(void *userData);
 
 }  // anonymous namespace
 
@@ -61,7 +65,7 @@ int Diffuser::process(const Signal& signal) const
     assert(m_initialized);
 
     PaError rc;
-    CbUserData userData = { 0, signal };
+    CbUserData userData = { std::promise<bool>(), 0, signal };
 
     PaStreamParameters outputParams;
     outputParams.device = Pa_GetDefaultOutputDevice();
@@ -94,6 +98,14 @@ int Diffuser::process(const Signal& signal) const
         return rc;
     }
 
+    rc = Pa_SetStreamFinishedCallback(audioStream, paFinishedCallback);
+    if (rc != paNoError) {
+        std::cerr << "Failed to set finished callback: "
+                  << Pa_GetErrorText(rc)
+                  << std::endl;
+        return rc;
+    }
+
     rc = Pa_StartStream(audioStream);
     if (rc != paNoError) {
         std::cerr << "Failed to start stream: "
@@ -102,7 +114,8 @@ int Diffuser::process(const Signal& signal) const
         return rc;
     }
 
-    Pa_Sleep(1000);
+    bool finished = userData.done.get_future().get();
+    assert(finished);
 
     rc = Pa_StopStream(audioStream);
     if (rc != paNoError) {
@@ -120,9 +133,7 @@ int Diffuser::process(const Signal& signal) const
         return rc;
     }
 
-    assert(userData.processed == signal.frames().size());
-
-    return 0;
+    return userData.processed == signal.frames().size() ? 0 : 1;
 }
 
 }  // library namespace
@@ -156,6 +167,11 @@ int paCallback(const void                     *input,
 
     data->processed += framesCopied;
     return data->processed < frames.size() ? paContinue : paComplete;
+}
+
+void paFinishedCallback(void *userData)
+{
+    ((CbUserData *)userData)->done.set_value(true);
 }
 
 }  // anonymous namespace

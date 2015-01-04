@@ -3,24 +3,19 @@
 
 #include <cstdlib>
 
-int main(int argc, char* argv[])
+int main()
 {
-    stinkee::Signal yellow;
-    stinkee::Signal purple;
-    yellow.encode(true,  true, false);
-    purple.encode(true, false,  true);
-
     stinkee::Diffuser diffuser;
 
     if (0 != diffuser.init()) {
         return EXIT_FAILURE;                                          // RETURN
     }
 
-    if (0 != diffuser.process(yellow)) {
-        return EXIT_FAILURE;                                          // RETURN
-    }
+    stinkee::Signal signal;
+    signal.encode(true,  true, false);  // Yellow
+    signal.encode(true, false,  true);  // Purple
 
-    if (0 != diffuser.process(purple)) {
+    if (0 != diffuser.process(signal)) {
         return EXIT_FAILURE;                                          // RETURN
     }
 
