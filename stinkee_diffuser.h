@@ -10,6 +10,8 @@ class Diffuser {
 
   public:
     Diffuser();
+    Diffuser(const Diffuser&) = delete;
+    Diffuser& operator=(const Diffuser&) = delete;
     ~Diffuser();
     int init();
     int process(const Signal& signal) const;
