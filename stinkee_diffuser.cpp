@@ -21,6 +21,18 @@ struct CbUserData
     const stinkee::Signal& signal;
 };
 
+class AutoClose
+{
+  private:
+    PaStream *m_audioStream;
+
+  public:
+    AutoClose(PaStream *audioStream);
+    AutoClose(const AutoClose&) = delete;
+    AutoClose& operator=(const AutoClose&) = delete;
+    ~AutoClose();
+};
+
 int paCallback(const void                     *input,
                void                           *output,
                unsigned long                   frameCount,
@@ -71,7 +83,7 @@ int Diffuser::process(const Signal& signal) const
     outputParams.device = Pa_GetDefaultOutputDevice();
     if (outputParams.device == paNoDevice) {
         std::cerr << "No audio output device available" << std::endl;
-        return paNoDevice;
+        return paNoDevice;                                            // RETURN
     }
 
     const PaDeviceInfo *deviceInfo = Pa_GetDeviceInfo(outputParams.device);
@@ -95,15 +107,18 @@ int Diffuser::process(const Signal& signal) const
         std::cerr << "Failed to open output stream: "
                   << Pa_GetErrorText(rc)
                   << std::endl;
-        return rc;
+        return rc;                                                    // RETURN
     }
+
+    // Will close the stream no matter what happens next...
+    AutoClose scopeGuard(audioStream);
 
     rc = Pa_SetStreamFinishedCallback(audioStream, paFinishedCallback);
     if (rc != paNoError) {
         std::cerr << "Failed to set finished callback: "
                   << Pa_GetErrorText(rc)
                   << std::endl;
-        return rc;
+        return rc;                                                    // RETURN
     }
 
     rc = Pa_StartStream(audioStream);
@@ -111,27 +126,12 @@ int Diffuser::process(const Signal& signal) const
         std::cerr << "Failed to start stream: "
                   << Pa_GetErrorText(rc)
                   << std::endl;
-        return rc;
+        return rc;                                                    // RETURN
     }
 
+    // Wait for the signal to be completely played
     bool finished = userData.done.get_future().get();
     assert(finished);
-
-    rc = Pa_StopStream(audioStream);
-    if (rc != paNoError) {
-        std::cerr << "Failed to stop stream: "
-                  << Pa_GetErrorText(rc)
-                  << std::endl;
-        return rc;
-    }
-
-    rc = Pa_CloseStream(audioStream);
-    if (rc != paNoError) {
-        std::cerr << "Failed to close stream: "
-                  << Pa_GetErrorText(rc)
-                  << std::endl;
-        return rc;
-    }
 
     return userData.processed == signal.frames().size() ? 0 : 1;
 }
@@ -139,6 +139,21 @@ int Diffuser::process(const Signal& signal) const
 }  // library namespace
 
 namespace {
+
+AutoClose::AutoClose(PaStream *audioStream)
+: m_audioStream(audioStream)
+{
+}
+
+AutoClose::~AutoClose()
+{
+    PaError rc = Pa_CloseStream(m_audioStream);
+    if (rc != paNoError) {
+        std::cerr << "Failed to close stream: "
+                  << Pa_GetErrorText(rc)
+                  << std::endl;
+    }
+}
 
 int paCallback(const void                     *input,
                void                           *output,
