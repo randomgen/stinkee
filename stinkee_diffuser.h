@@ -1,7 +1,8 @@
 #ifndef STINKEE_DIFFUSER
 #define STINKEE_DIFFUSER
 
-namespace stinkee { class Signal; }
+#include <vector>
+
 namespace stinkee {
 
 class Diffuser {
@@ -14,7 +15,7 @@ class Diffuser {
     Diffuser& operator=(const Diffuser&) = delete;
     ~Diffuser();
     int init();
-    int process(const Signal& signal) const;
+    int process(const std::vector<float>& signal) const;
 };
 
 }  // library namespace

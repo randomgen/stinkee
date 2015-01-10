@@ -16,9 +16,9 @@ static const PaSampleFormat SAMPLE_TYPE  = paFloat32;
 
 struct CbUserData
 {
-    std::promise<bool>     done;
-    std::size_t            processed;
-    const stinkee::Signal& signal;
+    std::promise<bool>        done;
+    std::size_t               processed;
+    const std::vector<float>& signal;
 };
 
 class AutoClose
@@ -72,7 +72,7 @@ int Diffuser::init()
     return rc;
 }
 
-int Diffuser::process(const Signal& signal) const
+int Diffuser::process(const std::vector<float>& signal) const
 {
     assert(m_initialized);
 
@@ -97,7 +97,7 @@ int Diffuser::process(const Signal& signal) const
             &audioStream,
             NULL,
             &outputParams,
-            Signal::SAMPLING_RATE,
+            signal::SAMPLING_RATE,
             paFramesPerBufferUnspecified,
             paClipOff | paDitherOff,
             paCallback,
@@ -133,7 +133,7 @@ int Diffuser::process(const Signal& signal) const
     bool finished = userData.done.get_future().get();
     assert(finished);
 
-    return userData.processed == signal.frames().size() ? 0 : 1;
+    return userData.processed == signal.size() ? 0 : 1;
 }
 
 }  // library namespace
@@ -163,7 +163,7 @@ int paCallback(const void                     *input,
                void                           *userData)
 {
     CbUserData *data = (CbUserData *)userData;
-    const std::vector<float>& frames = data->signal.frames();
+    const std::vector<float>& frames = data->signal;
     float *out = (float *)output;
 
     // Caller may request more frames than there is left in the signal buffer

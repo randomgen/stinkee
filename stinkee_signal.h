@@ -4,18 +4,17 @@
 #include <vector>
 
 namespace stinkee {
+namespace signal {
 
-class Signal {
-  private:
-    std::vector<float> m_frames;   // audio signal in the range [-1,1]
+// Audio samples per second (Hz)
+static const int SAMPLING_RATE = 44100;
 
-  public:
-    static const int SAMPLING_RATE;
+void encode(const bool          red,
+            const bool          green,
+            const bool          blue,
+            std::vector<float> *signal);
 
-    void encode(const bool red, const bool green, const bool blue);
-    const std::vector<float>& frames() const;
-};
-
+}  // module namespace
 }  // library namespace
 
 #endif

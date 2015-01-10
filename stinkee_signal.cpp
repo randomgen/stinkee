@@ -1,6 +1,8 @@
 #include <stinkee_signal.h>
 #include <stinkee_squarewave.h>
 
+#include <cassert>
+
 namespace {
 
 static const unsigned char HEADER      = 0x05;
@@ -18,19 +20,23 @@ static const int BIT_1_FREQUENCY = 1100;  // Wavelength to encode binary 1 (Hz)
 }  // anonymous namespace
 
 namespace stinkee {
+namespace signal {
 
-const int Signal::SAMPLING_RATE = 44100;  // Audio samples per second (Hz)
-
-void Signal::encode(const bool red, const bool green, const bool blue)
+void encode(const bool          red,
+            const bool          green,
+            const bool          blue,
+            std::vector<float> *signal)
 {
-    // Initial bang!  To wake up the diffuser?
-    m_frames.insert(m_frames.end(),
-                    NUM_STARTING_FRAMES,
-                    squarewave::LOW_LEVEL_AMPLITUDE);
+    assert(signal);
 
-    m_frames.insert(m_frames.end(),
-                    NUM_STARTING_SILENT_FRAMES,
-                    squarewave::SILENCE_AMPLITUDE);
+    // Initial bang!  To wake up the diffuser?
+    signal->insert(signal->end(),
+                   NUM_STARTING_FRAMES,
+                   squarewave::LOW_LEVEL_AMPLITUDE);
+
+    signal->insert(signal->end(),
+                   NUM_STARTING_SILENT_FRAMES,
+                   squarewave::SILENCE_AMPLITUDE);
 
     // Main part of the signal, represented by seven bytes
     std::vector<unsigned char> bytes = {
@@ -49,7 +55,7 @@ void Signal::encode(const bool red, const bool green, const bool blue)
                                SAMPLING_RATE,
                                BIT_0_FREQUENCY,
                                BIT_1_FREQUENCY,
-                               &m_frames);
+                               signal);
     }
 
     // End of the signal (unknown significance)
@@ -57,21 +63,17 @@ void Signal::encode(const bool red, const bool green, const bool blue)
                            SAMPLING_RATE,
                            BIT_0_FREQUENCY,
                            BIT_1_FREQUENCY,
-                           &m_frames);
+                           signal);
 
-    m_frames.insert(m_frames.end(),
-                    NUM_TERMINATING_FRAMES,
-                    squarewave::LOW_LEVEL_AMPLITUDE);
+    signal->insert(signal->end(),
+                   NUM_TERMINATING_FRAMES,
+                   squarewave::LOW_LEVEL_AMPLITUDE);
 
     // Gap to separate consecutive signals
-    m_frames.insert(m_frames.end(),
-                    SAMPLING_RATE,
-                    squarewave::SILENCE_AMPLITUDE);
+    signal->insert(signal->end(),
+                   SAMPLING_RATE,
+                   squarewave::SILENCE_AMPLITUDE);
 }
 
-const std::vector<float>& Signal::frames() const
-{
-    return m_frames;
-}
-
+}  // module namespace
 }  // library namespace
