@@ -3,7 +3,6 @@
 #include <cassert>
 
 namespace stinkee {
-namespace squarewave {
 
 void encodeByte(const unsigned char  byte,
                 const int            samplingRate,
@@ -49,5 +48,4 @@ void encodeBits(const std::vector<bool>&  bits,
     }
 }
 
-}  // module namespace
 }  // library namespace

@@ -97,7 +97,7 @@ int Diffuser::process(const std::vector<float>& signal) const
             &audioStream,
             NULL,
             &outputParams,
-            signal::SAMPLING_RATE,
+            SAMPLING_RATE,
             paFramesPerBufferUnspecified,
             paClipOff | paDitherOff,
             paCallback,

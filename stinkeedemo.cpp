@@ -13,8 +13,8 @@ int main()
     }
 
     std::vector<float> signal;
-    stinkee::signal::encode(true,  true, false, &signal);  // Yellow
-    stinkee::signal::encode(true, false,  true, &signal);  // Purple
+    stinkee::encode(true,  true, false, &signal);  // Yellow
+    stinkee::encode(true, false,  true, &signal);  // Purple
     int rc = diffuser.process(signal);
 
     return 0 == rc ? EXIT_SUCCESS : EXIT_FAILURE;
