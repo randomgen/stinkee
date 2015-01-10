@@ -1,18 +1,15 @@
-#include <stinkee_squarewaveutil.h>
+#include <stinkee_squarewave.h>
 
 #include <cassert>
 
 namespace stinkee {
+namespace squarewave {
 
-const float SquareWaveUtil::SILENCE_AMPLITUDE    =  0.0;
-const float SquareWaveUtil::LOW_LEVEL_AMPLITUDE  = -1.0;
-const float SquareWaveUtil::HIGH_LEVEL_AMPLITUDE = +1.0;
-
-void SquareWaveUtil::encodeByte(const unsigned char  byte,
-                                const int            samplingRate,
-                                const int            bit0Frequency,
-                                const int            bit1Frequency,
-                                std::vector<float>  *frames)
+void encodeByte(const unsigned char  byte,
+                const int            samplingRate,
+                const int            bit0Frequency,
+                const int            bit1Frequency,
+                std::vector<float>  *frames)
 {
     assert(samplingRate > 0);
     assert(bit0Frequency > 0);
@@ -28,11 +25,11 @@ void SquareWaveUtil::encodeByte(const unsigned char  byte,
     encodeBits(bits, samplingRate, bit0Frequency, bit1Frequency, frames);
 }
 
-void SquareWaveUtil::encodeBits(const std::vector<bool>&  bits,
-                                const int                 samplingRate,
-                                const int                 bit0Frequency,
-                                const int                 bit1Frequency,
-                                std::vector<float>       *frames)
+void encodeBits(const std::vector<bool>&  bits,
+                const int                 samplingRate,
+                const int                 bit0Frequency,
+                const int                 bit1Frequency,
+                std::vector<float>       *frames)
 {
     assert(samplingRate > 0);
     assert(bit0Frequency > 0);
@@ -52,4 +49,5 @@ void SquareWaveUtil::encodeBits(const std::vector<bool>&  bits,
     }
 }
 
+}  // module namespace
 }  // library namespace

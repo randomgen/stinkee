@@ -4,7 +4,7 @@ LIB       = libstinkee.a
 LIBSRC    = \
 	stinkee_diffuser.o \
 	stinkee_signal.o \
-	stinkee_squarewaveutil.o
+	stinkee_squarewave.o
 
 stinkeedemo: $(LIB) stinkeedemo.o
 	$(CXX) $(CXXFLAGS) -o stinkeedemo -L. stinkeedemo.o -lstinkee -lportaudio

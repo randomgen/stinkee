@@ -1,5 +1,5 @@
 #include <stinkee_signal.h>
-#include <stinkee_squarewaveutil.h>
+#include <stinkee_squarewave.h>
 
 namespace {
 
@@ -26,11 +26,11 @@ void Signal::encode(const bool red, const bool green, const bool blue)
     // Initial bang!  To wake up the diffuser?
     m_frames.insert(m_frames.end(),
                     NUM_STARTING_FRAMES,
-                    SquareWaveUtil::LOW_LEVEL_AMPLITUDE);
+                    squarewave::LOW_LEVEL_AMPLITUDE);
 
     m_frames.insert(m_frames.end(),
                     NUM_STARTING_SILENT_FRAMES,
-                    SquareWaveUtil::SILENCE_AMPLITUDE);
+                    squarewave::SILENCE_AMPLITUDE);
 
     // Main part of the signal, represented by seven bytes
     std::vector<unsigned char> bytes = {
@@ -45,28 +45,28 @@ void Signal::encode(const bool red, const bool green, const bool blue)
 
     // Encode each byte as a series of eight audio waves
     for (std::size_t i = 0; i < bytes.size(); ++i) {
-        SquareWaveUtil::encodeByte(bytes[i],
-                                   SAMPLING_RATE,
-                                   BIT_0_FREQUENCY,
-                                   BIT_1_FREQUENCY,
-                                   &m_frames);
-    }
-
-    // End of the signal (unknown significance)
-    SquareWaveUtil::encodeBits({ false },
+        squarewave::encodeByte(bytes[i],
                                SAMPLING_RATE,
                                BIT_0_FREQUENCY,
                                BIT_1_FREQUENCY,
                                &m_frames);
+    }
+
+    // End of the signal (unknown significance)
+    squarewave::encodeBits({ false },
+                           SAMPLING_RATE,
+                           BIT_0_FREQUENCY,
+                           BIT_1_FREQUENCY,
+                           &m_frames);
 
     m_frames.insert(m_frames.end(),
                     NUM_TERMINATING_FRAMES,
-                    SquareWaveUtil::LOW_LEVEL_AMPLITUDE);
+                    squarewave::LOW_LEVEL_AMPLITUDE);
 
     // Gap to separate consecutive signals
     m_frames.insert(m_frames.end(),
                     SAMPLING_RATE,
-                    SquareWaveUtil::SILENCE_AMPLITUDE);
+                    squarewave::SILENCE_AMPLITUDE);
 }
 
 const std::vector<float>& Signal::frames() const
