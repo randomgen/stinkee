@@ -1,4 +1,3 @@
-CXX      ?= g++
 CXXFLAGS ?= -std=c++11 -Wall -pedantic -g
 LIB       = libstinkee.a
 LIBSRC    = \
@@ -10,13 +9,13 @@ stinkeedemo: $(LIB) stinkeedemo.o
 	$(CXX) $(CXXFLAGS) -o stinkeedemo -L. stinkeedemo.o -lstinkee -lportaudio
 
 $(LIB): $(LIBSRC)
-	ar -rcs $(LIB) $?
+	$(AR) -rcs $(LIB) $?
 
 %.o: %.cpp
 	$(CXX) -c $(CXXFLAGS) -I. $<
 
 .PHONY: clean
 clean:
-	rm -f $(LIBSRC) stinkeedemo.o
-	rm -f $(LIB)
-	rm -f stinkeedemo
+	$(RM) $(LIBSRC) stinkeedemo.o
+	$(RM) $(LIB)
+	$(RM) stinkeedemo
