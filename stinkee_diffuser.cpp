@@ -14,17 +14,15 @@ namespace {
 static const int            NUM_CHANNELS = 1;
 static const PaSampleFormat SAMPLE_TYPE  = paFloat32;
 
-struct CbUserData
-{
+struct CbUserData {
     std::promise<bool>        done;
     std::size_t               processed;
     const std::vector<float>& signal;
 };
 
-class AutoClose
-{
+class AutoClose {
   private:
-    PaStream *m_audioStream;
+    PaStream *m_audioStream_p;
 
   public:
     AutoClose(PaStream *audioStream);
@@ -141,13 +139,13 @@ int Diffuser::process(const std::vector<float>& signal) const
 namespace {
 
 AutoClose::AutoClose(PaStream *audioStream)
-: m_audioStream(audioStream)
+: m_audioStream_p(audioStream)
 {
 }
 
 AutoClose::~AutoClose()
 {
-    PaError rc = Pa_CloseStream(m_audioStream);
+    PaError rc = Pa_CloseStream(m_audioStream_p);
     if (rc != paNoError) {
         std::cerr << "Failed to close stream: "
                   << Pa_GetErrorText(rc)

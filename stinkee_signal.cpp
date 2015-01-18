@@ -24,16 +24,16 @@ namespace stinkee {
 void encode(const bool          red,
             const bool          green,
             const bool          blue,
-            std::vector<float> *signal)
+            std::vector<float> *frames)
 {
-    assert(signal);
+    assert(frames);
 
     // Initial bang!  To wake up the diffuser?
-    signal->insert(signal->end(),
+    frames->insert(frames->end(),
                    NUM_STARTING_FRAMES,
                    LOW_LEVEL_AMPLITUDE);
 
-    signal->insert(signal->end(),
+    frames->insert(frames->end(),
                    NUM_STARTING_SILENT_FRAMES,
                    SILENCE_AMPLITUDE);
 
@@ -54,7 +54,7 @@ void encode(const bool          red,
                    SAMPLING_RATE,
                    BIT_0_FREQUENCY,
                    BIT_1_FREQUENCY,
-                   signal);
+                   frames);
     }
 
     // End of the signal (unknown significance)
@@ -62,14 +62,14 @@ void encode(const bool          red,
                SAMPLING_RATE,
                BIT_0_FREQUENCY,
                BIT_1_FREQUENCY,
-               signal);
+               frames);
 
-    signal->insert(signal->end(),
+    frames->insert(frames->end(),
                    NUM_TERMINATING_FRAMES,
                    LOW_LEVEL_AMPLITUDE);
 
     // Gap to separate consecutive signals
-    signal->insert(signal->end(),
+    frames->insert(frames->end(),
                    SAMPLING_RATE,
                    SILENCE_AMPLITUDE);
 }
