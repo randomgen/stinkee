@@ -38,8 +38,8 @@ void encodeBits(const std::vector<bool>&  bits,
     const int numFramesPerBit0 = samplingRate / bit0Frequency;
     const int numFramesPerBit1 = samplingRate / bit1Frequency;
 
-    for (std::size_t i = 0; i < bits.size(); ++i) {
-        const int numFramesPerLevel = bits[i]
+    for (const bool& bit : bits) {
+        const int numFramesPerLevel = bit
                                     ? numFramesPerBit1 / 2
                                     : numFramesPerBit0 / 2;
 

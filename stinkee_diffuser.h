@@ -14,6 +14,10 @@ class Diffuser {
     Diffuser(const Diffuser&) = delete;
     Diffuser& operator=(const Diffuser&) = delete;
 
+    // Not movable
+    Diffuser(Diffuser&&) = delete;
+    Diffuser& operator=(Diffuser&&) = delete;
+
   public:
     // Create an uninitialized 'Diffuser'.  Although multiple objects may be
     // instantiated, an application should just need one as there cannot be

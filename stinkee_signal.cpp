@@ -49,8 +49,8 @@ void encode(const bool          red,
     };
 
     // Encode each byte as a series of eight audio waves
-    for (std::size_t i = 0; i < bytes.size(); ++i) {
-        encodeByte(bytes[i],
+    for (const unsigned char& byte : bytes) {
+        encodeByte(byte,
                    SAMPLING_RATE,
                    BIT_0_FREQUENCY,
                    BIT_1_FREQUENCY,

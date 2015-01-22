@@ -88,12 +88,12 @@ int Diffuser::process(const std::vector<float>& signal) const
     outputParams.channelCount = NUM_CHANNELS;
     outputParams.sampleFormat = SAMPLE_TYPE;
     outputParams.suggestedLatency = deviceInfo->defaultLowOutputLatency;
-    outputParams.hostApiSpecificStreamInfo = NULL;
+    outputParams.hostApiSpecificStreamInfo = nullptr;
 
     PaStream *audioStream;
     rc = Pa_OpenStream(
             &audioStream,
-            NULL,
+            nullptr,
             &outputParams,
             SAMPLING_RATE,
             paFramesPerBufferUnspecified,
